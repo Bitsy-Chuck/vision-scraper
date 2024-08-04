@@ -1,0 +1,22 @@
+{
+  "name": "stealth-puppeteer-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@langchain/core": "^0.2.20",
+    "@langchain/openai": "^0.2.5",
+    "dotenv": "^16.4.5",
+    "puppeteer": "^22.14.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "winston": "^3.13.1"
+  }
+}
