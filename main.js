@@ -10,8 +10,8 @@ puppeteer.use(StealthPlugin());
 
 const messageHistories = {};
 let static_history = {
-    "username": "singhtejasv9@gmail.com ",
-    "password": "@wESOME11",
+    "username": "username",
+    "password": "pass",
 };
 
 async function analyzeScreenshot(withMessageHistory, config, screenshot, url, elementMap, isFirstAnalysis) {
