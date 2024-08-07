@@ -66,9 +66,6 @@ Your task is to:
 5. If applicable, process any user input and incorporate it into your decision-making.
 6. Provide a clear and concise plan of action.
 
-## Available Interactables
-{element_map}
-
 You can interact with the website by providing a JSON object with the following schema:
 
 {{
@@ -163,11 +160,12 @@ export async function setupChatChain(messageHistories) {
         ["placeholder", "{chat_history}"],
         ["human", "{input}"],
     ]);
+    // const model_claude = new ChatAnthropic({});
 
     const model = new ChatOpenAI({
         model: "gpt-4o",
         temperature: 0.7,
-        max_tokens: 1000,
+        // max_tokens: 1000,
     });
 
     // const parser = new JsonOutputParser<ActionResponse>();

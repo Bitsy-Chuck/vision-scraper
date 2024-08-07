@@ -10,7 +10,7 @@ puppeteer.use(StealthPlugin());
 
 const messageHistories = {};
 let static_history = {
-    "username": "username",
+    "username": "singhtejasv9@gmail.com",
     "password": "pass",
 };
 
@@ -132,9 +132,9 @@ let sessionMetadata = {
     const page = await browser.newPage();
 
     await page.setViewport({
-        width: 1200,
-        height: 1200,
-        deviceScaleFactor: 1,
+        width: 800,
+        height: 800,
+        deviceScaleFactor: 10
     });
 
     const {withMessageHistory, inputValueChain} = await setupChatChain(messageHistories);
