@@ -72,7 +72,14 @@ export async function processActions(page, browser, actions) {
 
 async function takeScreenshotWithHighlights(page) {
     await highlightInteractableElements(page);
-    const screenshot = await page.screenshot({encoding: "base64", fullPage: true});
+    const screenshot = await page.screenshot({
+        type: "webp",
+        encoding: "base64",
+        fullPage: true,
+        captureBeyondViewport: false,
+        quality: 10,
+    });
+    // const screenshot_min = resizedataURL(screenshot, 800, 600);
     const elementMap = await updateElementMap(page);
     return {screenshot: `data:image/png;base64,${screenshot}`, elementMap};
 }

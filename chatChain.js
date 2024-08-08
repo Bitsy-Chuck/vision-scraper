@@ -69,10 +69,10 @@ Your task is to:
 You can interact with the website by providing a JSON object with the following schema:
 
 {{
-  "reasoning": "Explain your thought process and decision-making here",
+  "reasoning": "Explain your thought process and decision-making here in under 20 words",
   "plan": {{
-    "goal_progress_assessment": "Briefly assess the progress towards the main goal",
-    "current_screen_objective": "State the objective for the current screen",
+    "goal_progress_assessment": "Briefly assess the progress towards the main goal in under 10 words",
+    "current_screen_objective": "State the objective for the current screen in under 20 words",
     "proposed_actions": [
       {{
         "action_type": "url" | "input" | "click",
@@ -85,8 +85,7 @@ You can interact with the website by providing a JSON object with the following 
       }}
     ],
     "order_of_execution": [0, 1, 2...],
-    "success_criteria": "Define what successful execution of this plan looks like",
-    "fallback_strategy": "Describe what to do if the plan fails"
+    "success_criteria": "Define what successful execution of this plan looks like in under 20 words"
   }}
 }}
 
@@ -106,7 +105,6 @@ json...
 \`\`\`
 
 The output will be parsed without any modifications. Ensure that your response is in the correct format to avoid errors in evaluation.
-
 
 Action types and their usage:
 - URL navigation: {{"action_type": "url", "value": "https://example.com"}}

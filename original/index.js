@@ -11,6 +11,7 @@ import {fileURLToPath} from 'url';
 import {dirname} from 'path';
 import {InMemoryChatMessageHistory} from "@langchain/core/chat_history";
 import {HumanMessage} from "@langchain/core/messages";
+import {logger} from "../utils.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -31,7 +32,8 @@ function loadStaticContent() {
         const data = fs.readFileSync('static_content.json', 'utf8');
         return JSON.parse(data);
     } catch (err) {
-        console.log('No existing static content found. Creating a new one.');
+        // console.log('No existing static content found. Creating a new one.');
+        logger.error('No existing static content found. Creating a new one.');
         return {};
     }
 }
@@ -158,7 +160,8 @@ async function clickElementById(page, elementId) {
         await page.waitForNavigation({waitUntil: 'networkidle0'}).catch(() => {
         });
     } else {
-        console.log(`Element with ID ${elementId} not found`);
+        // console.log(`Element with ID ${elementId} not found`);
+        logger.error(`Element with ID ${elementId} not found`);
     }
 }
 
@@ -167,17 +170,21 @@ async function inputTextById(page, elementId, inputValue) {
     if (element) {
         await element.element.type(inputValue);
     } else {
-        console.log(`Element with ID ${elementId} not found`);
+        // console.log(`Element with ID ${elementId} not found`);
+        logger.error(`Element with ID ${elementId} not found`);
+
     }
 }
 
 async function loadWebsiteAndTakeScreenshot(browser, url) {
-    console.log('Loading website and taking screenshot...');
+    // console.log('Loading website and taking screenshot...');
+    logger.info('Loading website and taking screenshot...');
     const page = await browser.newPage();
     await page.goto(url, {waitUntil: 'networkidle0'});
     const updatedElementMap = await updateElementMap(page);
     await page.screenshot({path: 'screenshot.jpg', fullPage: true});
-    console.log(`Screenshot taken. ✨`);
+    // console.log(`Screenshot taken. ✨`);
+    logger.info(`Screenshot taken. ✨`);
     return {page, elementMap: updatedElementMap};
 }
 
@@ -187,18 +194,21 @@ async function processActions(page, browser, actions) {
     let clickActions = actions.filter(action => action.type === 'click');
 
     if (urlAction) {
-        console.log(`Navigating to ${urlAction.value}`);
+        // console.log(`Navigating to ${urlAction.value}`);
+        logger.info(`Navigating to ${urlAction.value}`);
         const result = await loadWebsiteAndTakeScreenshot(browser, urlAction.value);
         return {page: result.page, screenshotTaken: true, elementMap: result.elementMap};
     }
 
     for (const action of inputActions) {
-        console.log(`Inputting text into element with ID ${action.elementId}`);
+        // console.log(`Inputting text into element with ID ${action.elementId}`);
+        logger.info(`Inputting text into element with ID ${action.elementId}`);
         await inputTextById(page, action.elementId, action.value);
     }
 
     for (const action of clickActions) {
-        console.log(`Clicking on element with ID ${action.elementId}`);
+        // console.log(`Clicking on element with ID ${action.elementId}`);
+        logger.info(`Clicking on element with ID ${action.elementId}`);
         await clickElementById(page, action.elementId);
     }
 
@@ -318,8 +328,10 @@ function extractJSONWithSchema(text) {
     `;
 
     const printIntermediateStage = (input) => {
-        console.log("Intermediate stage - Input to the model:");
-        console.log(JSON.stringify(input, null, 2));
+        // console.log("Intermediate stage - Input to the model:");
+        // console.log(JSON.stringify(input, null, 2));
+        logger.info("Intermediate stage - Input to the model:");
+        logger.info(JSON.stringify(input, null, 2));
         return JSON.stringify(input);
     };
 
@@ -356,7 +368,7 @@ function extractJSONWithSchema(text) {
                 messageHistories[sessionId] = new InMemoryChatMessageHistory();
             }
             const t = messageHistories[sessionId];
-            console.log("t", t);
+            logger.info("t", t);
             return t;
         },
         inputMessagesKey: "input",
@@ -370,7 +382,7 @@ function extractJSONWithSchema(text) {
                 messageHistories[sessionId] = new InMemoryChatMessageHistory();
             }
             const t = messageHistories[sessionId];
-            console.log("t", t);
+            logger.info("t", t);
             return t;
         },
         inputMessagesKey: "input",
@@ -423,7 +435,8 @@ function extractJSONWithSchema(text) {
         );
 
         const message_text = response.content;
-        console.log("GPT: " + message_text);
+        // console.log("GPT: " + message_text);
+        logger.info("GPT: " + message_text);
 
         const jsonObjects = extractJSONWithSchema(message_text);
         if (jsonObjects.length > 0) {
@@ -438,7 +451,8 @@ function extractJSONWithSchema(text) {
                             throw new Error(`Element with ID ${action.elementId} not found`);
                         }
                         if (!currentPage) {
-                            console.log("No page loaded yet. Please provide a URL action first.");
+                            // console.log("No page loaded yet. Please provide a URL action first.");
+                            logger.warn("No page loaded yet. Please provide a URL action first.");
                             continue;
                         }
                         const fieldName = await currentPage.evaluate(el => el.getAttribute('gpt-interactable'), element.element);

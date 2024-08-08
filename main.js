@@ -3,7 +3,7 @@ import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import {setupChatChain} from './chatChain.js';
 import {loadWebsiteAndTakeScreenshot, processActions} from './browserActions.js';
-import {input} from './utils.js';
+import {input, logger} from './utils.js';
 
 dotenv.config();
 puppeteer.use(StealthPlugin());
@@ -210,20 +210,21 @@ let sessionMetadata = {
         );
 
         const message_text = response.content;
-        console.log("GPT: " + message_text);
+        // console.log("GPT: " + message_text);
+        logger.info("GPT: " + JSON.stringify(message_text));
 
         const responseDTO = extractJSONWithSchemaBasic(message_text);
         const jsonObjects = [responseDTO];
         if (jsonObjects.length > 0) {
             for (const jsonObject of jsonObjects) {
-                console.log("Reasoning:", jsonObject.reasoning);
-                console.log("Plan:", JSON.stringify(jsonObject.plan, null, 2));
+                logger.info("Reasoning: " + JSON.stringify(jsonObject));
 
                 for (let j = 0; j < jsonObject.plan.proposed_actions.length; j++) {
                     let action = jsonObject.plan.proposed_actions[j];
                     if (action.action_type === 'input') {
                         const inputValueResponse = await handleInputAction(action, currentPage, jsonObject.plan.proposed_actions.slice(0, j), inputValueChain, currentElementMap);
-                        console.log(`Input value response: ${inputValueResponse.value}`);
+                        // console.log(`Input value response: ${inputValueResponse.value}`);
+                        logger.info(`Input value response: ${inputValueResponse.value}`);
                         action.value = inputValueResponse.value;
                     }
                 }
